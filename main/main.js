@@ -10,8 +10,9 @@ module.exports.loop = function () {
     }
 
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+    var sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
 
-    if(harvesters.length < 2) {
+    if(harvesters.length < sources.length) {
         var newName = 'Harvester' + Game.time;
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
             {memory: {role: 'harvester'}});
