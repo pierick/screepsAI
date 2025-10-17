@@ -5,7 +5,7 @@ const roomDefense = {
         }
 
         const exits = room.find(FIND_EXIT);
-        const terrain = new Game.Terrain(room.name);
+        const terrain = Game.map.getRoomTerrain(room.name);
 
         for (let i = 0; i < exits.length; i++) {
             const exit = exits[i];
