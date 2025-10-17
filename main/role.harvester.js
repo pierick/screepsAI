@@ -2,7 +2,18 @@ var roleHarvester = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        if (!creep.memory.source_id) {
+            var sources = creep.room.find(FIND_SOURCES);
+            if (sources.length > 0) {
+                creep.memory.source_id = sources[0].id;
+            }
+        }
         var source = Game.getObjectById(creep.memory.source_id);
+
+        if (!source) {
+            delete creep.memory.source_id;
+            return;
+        }
 
         // Find container
         var container = source.pos.findInRange(FIND_STRUCTURES, 1, {
