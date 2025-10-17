@@ -20,7 +20,7 @@ module.exports.loop = function () {
         filter: object => object.hits < object.hitsMax
     });
 
-    if(builders.length < 1 && (constructionSites.length > 0 || repairableStructures.length > 0)) {
+    if(builders.length < 4 && (constructionSites.length > 0 || repairableStructures.length > 0)) {
         var newName = 'Builder' + Game.time;
         console.log('Spawning new builder: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
