@@ -18,6 +18,10 @@ var roleUpgrader = {
             const path = creep.pos.findPathTo(creep.room.controller);
             creep.memory.pathToController = path;
             for (const pos of path) {
+                // Do not create a construction site if the position is the controller's position
+                if (pos.x === creep.room.controller.pos.x && pos.y === creep.room.controller.pos.y) {
+                    continue; // Skip this position
+                }
                 creep.room.createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
             }
             creep.memory.roadPlanned = true;
