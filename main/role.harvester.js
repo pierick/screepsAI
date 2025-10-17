@@ -48,8 +48,19 @@ var roleHarvester = {
         }
         // If harvester is not full
         else {
-            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+            // If a container exists, move to its position and harvest
+            if (container) {
+                if(creep.pos.isEqualTo(container.pos)) {
+                    creep.harvest(source);
+                } else {
+                    creep.moveTo(container, {visualizePathStyle: {stroke: '#ffaa00'}});
+                }
+            }
+            // If no container, move to the source position and harvest
+            else {
+                if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
+                }
             }
         }
     }
