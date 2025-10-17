@@ -13,11 +13,17 @@ module.exports.loop = function () {
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
 
-    if(harvesters.length < 2) {
-        var newName = 'Harvester' + Game.time;
-        console.log('Spawning new harvester: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
-            {memory: {role: 'harvester'}});
+    var sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
+    if(harvesters.length < sources.length) {
+        var assignedSources = _.map(harvesters, (c) => c.memory.source_id);
+        var targetSource = _.find(sources, (s) => !_.includes(assignedSources, s.id));
+
+        if(targetSource) {
+            var newName = 'Harvester' + Game.time;
+            console.log('Spawning new harvester for source ' + targetSource.id);
+            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
+                {memory: {role: 'harvester', source_id: targetSource.id}});
+        }
     }
 
     if(upgraders.length < 1) {
