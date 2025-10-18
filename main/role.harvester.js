@@ -2,6 +2,38 @@
  * @module role.harvester
  * @description Logique pour le rôle de harvester.
  */
+
+// Fonction pour assigner une source non utilisée à un nouveau harvester
+function assignSourceToNewHarvester(creep) {
+    if (!creep.memory.source_id) {
+        // Récupérer toutes les sources dans la pièce
+        const sources = creep.room.find(FIND_SOURCES);
+        
+        // Boucle externe : parcourir les sources
+        for (let source of sources) {
+            let isSourceUsed = false;
+            
+            // Boucle interne : parcourir les harvesters pour vérifier si la source est attribuée
+            for (let name in Game.creeps) {
+                let otherCreep = Game.creeps[name];
+                if (otherCreep.memory.role === 'harvester' && otherCreep.memory.source_id === source.id && otherCreep.id !== creep.id) {
+                    isSourceUsed = true;
+                    break; // Sortir de la boucle interne dès qu'on trouve un harvester utilisant cette source
+                }
+            }
+            
+            // Si la source n'est pas utilisée, l'attribuer au creep
+            if (!isSourceUsed) {
+                creep.memory.source_id = source.id;
+                return; // Sortir après avoir assigné une source
+            }
+        }
+        
+        // Cas où aucune source n'est disponible
+        console.log('Aucune source libre pour ' + creep.name);
+    }
+}
+
 var roleHarvester = {
 
     /** 
@@ -9,12 +41,8 @@ var roleHarvester = {
      */
     run: function(creep) {
         // Assigne une source au harvester s'il n'en a pas.
-        if (!creep.memory.source_id) {
-            var sources = creep.room.find(FIND_SOURCES);
-            if (sources.length > 0) {
-                creep.memory.source_id = sources[0].id;
-            }
-        }
+        assignSourceToNewHarvester(creep);
+        
         var source = Game.getObjectById(creep.memory.source_id);
 
         // Si la source n'existe plus, réinitialise la mémoire du creep.
